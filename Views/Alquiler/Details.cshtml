@@ -1,0 +1,48 @@
+@model app_house.Models.Alquiler
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Alquiler</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaAlquiler)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FechaAlquiler)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Clientename)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Clientename)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Casaname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Casaname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Casa)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Casa.Casaname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Cliente)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Cliente.Clienteapellido)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Alquilerid">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
