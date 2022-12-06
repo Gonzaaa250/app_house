@@ -14,7 +14,7 @@ namespace app_house.Models
         public int Clienteid { get; set; }
 
         [Display(Name ="Casa")]
-        public int CasaID { get; set; }
+        public int Casaid { get; set; }
 
         [Display(Name ="nombre del cliente")]
         public string? Clientename { get; set; }
@@ -24,5 +24,6 @@ namespace app_house.Models
         
         public virtual Casa? Casa { get; set; }
         public virtual Cliente? Cliente { get; set; }
+    
     }
 }

@@ -1,0 +1,87 @@
+@model IEnumerable<app_house.Models.Casa>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Dueñoname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Domicilio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Casaname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.imagencasa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.metros)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MontoF)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eliminada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.alquilada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Localidad)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dueñoname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Domicilio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Casaname)
+            </td>
+            <td>
+                @{
+                    var base64 = Convert.ToBase64String(item.imagencasa);
+                    var imgsrc = String.Format("data:image/png;base64,{0}", base64);
+                 }
+                 <img src="@imgsrc" alt="">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.metros)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MontoF)
+            </td>
+            <td>
+                @(item.eliminada?"Esta casa fue eliminada":"esta casa esta sin eliminar")
+            </td>
+            <td>
+                @(item.alquilada?"Esta casa ya fue alquilada":"esta casa esta disponible")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Localidad)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Casaid">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Casaid">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Casaid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
