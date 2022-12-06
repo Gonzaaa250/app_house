@@ -21,6 +21,11 @@ namespace app_house.Models
 
        [Display(Name ="nombre de la casa")]
         public string? Casaname { get; set; }
+
+        [Display(Name= "Monto total")]
+        public int MontoTotal { get; set; }
+
+        public byte[]? imagencasa { get; set; }
         
         public virtual Casa? Casa { get; set; }
         public virtual Cliente? Cliente { get; set; }

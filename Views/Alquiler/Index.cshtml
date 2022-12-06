@@ -25,9 +25,12 @@
                 @Html.DisplayNameFor(model => model.Casa)
             </th>
             <th>
+               @Html.DisplayNameFor(model => model.MontoTotal)
+            </th>
+
+            <th>
                 @Html.DisplayNameFor(model => model.Cliente)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -42,16 +45,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Casaname)
             </td>
+             <td>
+                @{
+                    var base64 = Convert.ToBase64String(item.imagencasa);
+                    var imgsrc = String.Format("data:image/png;base64,{0}", base64);
+                 }
+                 <img src="@imgsrc" alt="">
+            </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Casa.Casaname)
+                @Html.DisplayFor(modelItem => item.MontoTotal)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Cliente.Clienteapellido)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Alquilerid">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Alquilerid">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Alquilerid">Delete</a>
             </td>
         </tr>
 }

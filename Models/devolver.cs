@@ -6,7 +6,7 @@ namespace app_house.Models
         [Key]
         public int Devolverid {get ;set;}
 
-        [Display(Name ="")]
+        [Display(Name ="Fecha de Devolucion")]
         [DataType(DataType.Date)]
         public DateTime FechaDevolucion { get; set;}
         [Display(Name ="Alquiler")]

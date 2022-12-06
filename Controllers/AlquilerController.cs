@@ -25,30 +25,10 @@ namespace app_house.Controllers
             return View(await apphouseContext.ToListAsync());
         }
 
-        // GET: Alquiler/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Alquiler == null)
-            {
-                return NotFound();
-            }
-
-            var alquiler = await _context.Alquiler
-                .Include(a => a.Casa)
-                .Include(a => a.Cliente)
-                .FirstOrDefaultAsync(m => m.Alquilerid == id);
-            if (alquiler == null)
-            {
-                return NotFound();
-            }
-
-            return View(alquiler);
-        }
-
         // GET: Alquiler/Create
         public IActionResult Create()
         {
-            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname");
+            ViewData["Casaid"] = new SelectList(_context.Casa.Where(x => x.alquilada == false && x.eliminada == false), "Casaid", "Casaname");
             ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido");
             return View();
         }
@@ -58,116 +38,48 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Alquilerid,FechaAlquiler,Clienteid,Casaid,Clientename,Casaname")] Alquiler alquiler)
+        public async Task<IActionResult> Create([Bind("Alquilerid,FechaAlquiler,Clienteid,Casaid,MontoTotal,imagencasa,Clientename,Casaname")] Alquiler alquiler)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(alquiler);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.Casaid);
-            ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido", alquiler.Clienteid);
-            return View(alquiler);
-        }
-
-        // GET: Alquiler/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Alquiler == null)
-            {
-                return NotFound();
-            }
-
-            var alquiler = await _context.Alquiler.FindAsync(id);
-            if (alquiler == null)
-            {
-                return NotFound();
-            }
-            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.Casaid);
-            ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido", alquiler.Clienteid);
-            return View(alquiler);
-        }
-
-        // POST: Alquiler/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Alquilerid,FechaAlquiler,Clienteid,Casaid,Clientename,Casaname")] Alquiler alquiler)
-        {
-            if (id != alquiler.Alquilerid)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(alquiler);
-                    await _context.SaveChangesAsync();
+                    var Cliente = (from a in _context.Cliente where a.Clienteid == alquiler.Clienteid select a).FirstOrDefault();
+                    var Casa = (from a in _context.Casa where a.Casaid == alquiler.Casaid select a).FirstOrDefault();
+                    if (Casa.Localidad == Cliente.Localidad)
+                    {
+                        if (Casa.eliminada == false)
+                        {
+                            alquiler.Casaname = Casa.Casaname;
+                            alquiler.Clientename = Cliente.Clientename + " " + Cliente.Clienteapellido;
+                            alquiler.MontoTotal = Casa.metros * Casa.MontoF;
+                            alquiler.imagencasa = Casa.imagencasa;
+                            Casa.alquilada = true;
+                            _context.Add(alquiler);
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction(nameof(Index));
+
+                        }
+
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (System.Exception)
                 {
-                    if (!AlquilerExists(alquiler.Alquilerid))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
+
+
             }
-            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.Casaid);
+            ViewData["Casaid"] = new SelectList(_context.Casa.Where(x => x.alquilada == false && x.eliminada == false), "Casaid", "Casaname", alquiler.Casaid);
             ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido", alquiler.Clienteid);
             return View(alquiler);
         }
-
-        // GET: Alquiler/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Alquiler == null)
-            {
-                return NotFound();
-            }
-
-            var alquiler = await _context.Alquiler
-                .Include(a => a.Casa)
-                .Include(a => a.Cliente)
-                .FirstOrDefaultAsync(m => m.Alquilerid == id);
-            if (alquiler == null)
-            {
-                return NotFound();
-            }
-
-            return View(alquiler);
-        }
-
-        // POST: Alquiler/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Alquiler == null)
-            {
-                return Problem("Entity set 'apphouseContext.Alquiler'  is null.");
-            }
-            var alquiler = await _context.Alquiler.FindAsync(id);
-            if (alquiler != null)
-            {
-                _context.Alquiler.Remove(alquiler);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+      
 
         private bool AlquilerExists(int id)
         {
-          return (_context.Alquiler?.Any(e => e.Alquilerid == id)).GetValueOrDefault();
+            return (_context.Alquiler?.Any(e => e.Alquilerid == id)).GetValueOrDefault();
         }
     }
 }
