@@ -21,33 +21,15 @@ namespace app_house.Controllers
         // GET: Cliente
         public async Task<IActionResult> Index()
         {
-            var apphouseContext = _context.Cliente.Include(c => c.Localidad);
-            return View(await apphouseContext.ToListAsync());
+              return _context.Cliente != null ? 
+                          View(await _context.Cliente.ToListAsync()) :
+                          Problem("Entity set 'apphouseContext.Cliente'  is null.");
         }
 
-        // GET: Cliente/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Cliente == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Cliente
-                .Include(c => c.Localidad)
-                .FirstOrDefaultAsync(m => m.Clienteid == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);
-        }
 
         // GET: Cliente/Create
         public IActionResult Create()
         {
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname");
             return View();
         }
 
@@ -56,7 +38,7 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Clienteid,Clientename,Clienteapellido,DNI,Fechanacimiento,Localidadid")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Clienteid,Clientename,Clienteapellido,DNI,Fechanacimiento,Localidad")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
@@ -64,7 +46,6 @@ namespace app_house.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname", cliente.Localidadid);
             return View(cliente);
         }
 
@@ -81,7 +62,6 @@ namespace app_house.Controllers
             {
                 return NotFound();
             }
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname", cliente.Localidadid);
             return View(cliente);
         }
 
@@ -90,7 +70,7 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Clienteid,Clientename,Clienteapellido,DNI,Fechanacimiento,Localidadid")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("Clienteid,Clientename,Clienteapellido,DNI,Fechanacimiento,Localidad")] Cliente cliente)
         {
             if (id != cliente.Clienteid)
             {
@@ -117,46 +97,28 @@ namespace app_house.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname", cliente.Localidadid);
             return View(cliente);
         }
 
-        // GET: Cliente/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Cliente == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Cliente
-                .Include(c => c.Localidad)
-                .FirstOrDefaultAsync(m => m.Clienteid == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);
-        }
 
         // POST: Cliente/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Cliente == null)
-            {
-                return Problem("Entity set 'apphouseContext.Cliente'  is null.");
-            }
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente != null)
-            {
+           var cliente = await _context.Cliente.FindAsync(id);
+           if (cliente != null)
+           {
+             var alquilada = (from a in _context.Alquiler where a.Clienteid == id select a).Count();
+             if(alquilada != 0)
+             {
+                
+                return RedirectToAction(nameof(Index));
+             }
+             else {
                 _context.Cliente.Remove(cliente);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+             }
+           }
+           return RedirectToAction(nameof(Index));
         }
 
         private bool ClienteExists(int id)

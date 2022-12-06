@@ -21,33 +21,15 @@ namespace app_house.Controllers
         // GET: Casa
         public async Task<IActionResult> Index()
         {
-            var apphouseContext = _context.Casa.Include(c => c.Localidad);
-            return View(await apphouseContext.ToListAsync());
+              return _context.Casa != null ? 
+                          View(await _context.Casa.ToListAsync()) :
+                          Problem("Entity set 'apphouseContext.Casa'  is null.");
         }
 
-        // GET: Casa/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Casa == null)
-            {
-                return NotFound();
-            }
-
-            var casa = await _context.Casa
-                .Include(c => c.Localidad)
-                .FirstOrDefaultAsync(m => m.Casaid == id);
-            if (casa == null)
-            {
-                return NotFound();
-            }
-
-            return View(casa);
-        }
 
         // GET: Casa/Create
         public IActionResult Create()
         {
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname");
             return View();
         }
 
@@ -56,15 +38,33 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Casaid,Dueñoname,Domicilio,Casaname,imagencasa,metros,MontoF,eliminada,alquilada,Localidadid")] Casa casa)
+        public async Task<IActionResult> Create([Bind("Casaid,Dueñoname,Domicilio,Casaname,imagencasa,metros,MontoF,eliminada,alquilada,Localidad")] Casa casa, IFormFile imagencasa)
         {
             if (ModelState.IsValid)
             {
+                if(imagencasa != null && imagencasa.Length > 0) 
+                {
+                  byte[]? Imagen = null;
+                  using(var fs1 = imagencasa.OpenReadStream()) 
+                  using(var ms1 = new MemoryStream()) 
+                  {
+                    fs1.CopyTo(ms1);
+                    Imagen = ms1.ToArray();
+                  }
+                  casa.imagencasa = Imagen;
+                  foreach (var item in _context.Casa)
+                  {
+                    if (item.alquilada == false)
+                    {
+                        item.MontoF = casa.MontoF;
+                    }
+                  }
+                  _context.SaveChanges();
+                }
                 _context.Add(casa);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname", casa.Localidadid);
             return View(casa);
         }
 
@@ -81,7 +81,6 @@ namespace app_house.Controllers
             {
                 return NotFound();
             }
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname", casa.Localidadid);
             return View(casa);
         }
 
@@ -90,7 +89,7 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Casaid,Dueñoname,Domicilio,Casaname,imagencasa,metros,MontoF,eliminada,alquilada,Localidadid")] Casa casa)
+        public async Task<IActionResult> Edit(int id, [Bind("Casaid,Dueñoname,Domicilio,Casaname,imagencasa,metros,MontoF,eliminada,alquilada,Localidad")] Casa casa, IFormFile imagencasa)
         {
             if (id != casa.Casaid)
             {
@@ -101,7 +100,29 @@ namespace app_house.Controllers
             {
                 try
                 {
-                    _context.Update(casa);
+                     if(imagencasa != null && imagencasa.Length > 0) 
+                {
+                  byte[]? Imagen = null;
+                  using(var fs1 = imagencasa.OpenReadStream()) 
+                  using(var ms1 = new MemoryStream()) 
+                  {
+                    fs1.CopyTo(ms1);
+                    Imagen = ms1.ToArray();
+                  }
+                  
+                   foreach (var item in _context.Casa)
+                  {
+                    if(item.Casaid == id)
+                    {
+                        item.imagencasa = Imagen;
+                    }
+                    if (item.alquilada == false)
+                    {
+                        item.MontoF = casa.MontoF;
+                    }
+                  }
+                  _context.SaveChanges();
+                }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,46 +138,40 @@ namespace app_house.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Localidadid"] = new SelectList(_context.Set<Localidad>(), "Localidadid", "Localidadname", casa.Localidadid);
             return View(casa);
         }
 
-        // GET: Casa/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Casa == null)
-            {
-                return NotFound();
-            }
-
-            var casa = await _context.Casa
-                .Include(c => c.Localidad)
-                .FirstOrDefaultAsync(m => m.Casaid == id);
-            if (casa == null)
-            {
-                return NotFound();
-            }
-
-            return View(casa);
-        }
+        
 
         // POST: Casa/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Casa == null)
-            {
-                return Problem("Entity set 'apphouseContext.Casa'  is null.");
-            }
-            var casa = await _context.Casa.FindAsync(id);
-            if (casa != null)
-            {
-                _context.Casa.Remove(casa);
-            }
-            
-            await _context.SaveChangesAsync();
+           var casa = await _context.Casa.FindAsync(id);
+           if (casa.alquilada == true)
+           {
             return RedirectToAction(nameof(Index));
+           }
+           if (casa.eliminada == true)
+           {      
+             return RedirectToAction(nameof(Index));      
+           }
+           if (casa != null)
+           {
+             var alquilada = (from a in _context.Alquiler where a.Casaid == id select a).Count();
+             if(alquilada != 0)
+             {
+                casa.eliminada = true;
+                casa.Casaname = casa.Casaname + " (eliminada)"; 
+                _context.Update(casa);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+             }
+             else {
+                _context.Casa.Remove(casa);
+                await _context.SaveChangesAsync();
+             }
+           }
+           return RedirectToAction(nameof(Index));
         }
 
         private bool CasaExists(int id)

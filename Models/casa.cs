@@ -33,14 +33,15 @@ namespace app_house.Models
         // Monto fijo
         [Display(Name ="Monto Fijo")]
         [Required( ErrorMessage ="Es necesario completar esto")]
-        public int MontoF { get; set;}
+        public int MontoF { get; set; }
 
         public bool eliminada { get; set; }
         public bool alquilada { get; set; }
         
         [Display(Name ="Localidad")]
-        public int Localidadid { get; set; }
-
-        public virtual Localidad? Localidad { get; set; }
+        [Required( ErrorMessage = "Es necesario completar esto")]
+        [MaxLength(25, ErrorMessage = "Maximo 25 caracteres")]
+        [RegularExpression(@"[A-Z\s]*$", ErrorMessage = "Solo mayusculas y espacios")]
+        public string? Localidad { get; set; }
     }
 }

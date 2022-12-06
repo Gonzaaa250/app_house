@@ -12,11 +12,9 @@ using app_house.Models;
         {
         }
 
-        public DbSet<app_house.Models.Casa> Casa { get; set; } = default!;
+        public DbSet<app_house.Models.Casa> Casa { get; set; }
 
         public DbSet<app_house.Models.Cliente>? Cliente { get; set; }
-
-        public DbSet<app_house.Models.Localidad>? Localidad { get; set; }
 
         public DbSet<app_house.Models.Alquiler>? Alquiler { get; set; }
 

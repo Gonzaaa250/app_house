@@ -48,7 +48,7 @@ namespace app_house.Controllers
         // GET: Alquiler/Create
         public IActionResult Create()
         {
-            ViewData["CasaID"] = new SelectList(_context.Casa, "Casaid", "Casaname");
+            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname");
             ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido");
             return View();
         }
@@ -58,7 +58,7 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Alquilerid,FechaAlquiler,Clienteid,CasaID,Clientename,Casaname")] Alquiler alquiler)
+        public async Task<IActionResult> Create([Bind("Alquilerid,FechaAlquiler,Clienteid,Casaid,Clientename,Casaname")] Alquiler alquiler)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace app_house.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CasaID"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.CasaID);
+            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.Casaid);
             ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido", alquiler.Clienteid);
             return View(alquiler);
         }
@@ -84,7 +84,7 @@ namespace app_house.Controllers
             {
                 return NotFound();
             }
-            ViewData["CasaID"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.CasaID);
+            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.Casaid);
             ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido", alquiler.Clienteid);
             return View(alquiler);
         }
@@ -94,7 +94,7 @@ namespace app_house.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Alquilerid,FechaAlquiler,Clienteid,CasaID,Clientename,Casaname")] Alquiler alquiler)
+        public async Task<IActionResult> Edit(int id, [Bind("Alquilerid,FechaAlquiler,Clienteid,Casaid,Clientename,Casaname")] Alquiler alquiler)
         {
             if (id != alquiler.Alquilerid)
             {
@@ -121,7 +121,7 @@ namespace app_house.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CasaID"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.CasaID);
+            ViewData["Casaid"] = new SelectList(_context.Casa, "Casaid", "Casaname", alquiler.Casaid);
             ViewData["Clienteid"] = new SelectList(_context.Cliente, "Clienteid", "Clienteapellido", alquiler.Clienteid);
             return View(alquiler);
         }
