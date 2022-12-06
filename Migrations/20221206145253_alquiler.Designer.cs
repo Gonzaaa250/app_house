@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace app_house.Migrations
 {
     [DbContext(typeof(apphouseContext))]
-    partial class apphouseContextModelSnapshot : ModelSnapshot
+    [Migration("20221206145253_alquiler")]
+    partial class alquiler
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,9 +48,6 @@ namespace app_house.Migrations
 
                     b.Property<int>("MontoTotal")
                         .HasColumnType("int");
-
-                    b.Property<byte[]>("imagencasa")
-                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Alquilerid");
 
