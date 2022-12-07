@@ -15,6 +15,9 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-image: url(../css/fondo.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .BotonCrear{
   text-decoration: none;
@@ -76,6 +79,6 @@ body {
   padding: 5px;
   margin: 5px;
 }
-.fondo{
-  background-color: rgb(0, 0, 0);
+.table{
+  border-radius: 15px 25px 30px;
 }
