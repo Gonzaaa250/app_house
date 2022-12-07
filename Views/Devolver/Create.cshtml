@@ -1,10 +1,9 @@
 @model app_house.Models.Devolver
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear";
 }
 
-<h1>Create</h1>
 
 <h4>Devolver</h4>
 <hr />
@@ -22,13 +21,13 @@
                 <select asp-for="Casaid" class ="form-control" asp-items="ViewBag.Casaid"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-primary Botoncrear2" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Volver</a>
+    <a asp-action="Index" class="BotonVolver">Volver</a>
 </div>
 
