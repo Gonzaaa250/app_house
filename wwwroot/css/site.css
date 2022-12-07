@@ -16,3 +16,66 @@ html {
 body {
   margin-bottom: 60px;
 }
+.BotonCrear{
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 15px;
+  color: rgb(6, 113, 251);
+  background-color: rgb(0, 0, 0);
+  border-width: 4px;
+  border-style: inset;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+.Botoncrear2{
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 15px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(122, 0, 128);
+  border-width: 4px;
+  border-style: inset;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+.BotonVolver{
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 15px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(2, 223, 226);
+  border-width: 4px;
+  border-style: inset;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+.BotonEliminar{
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 15px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 0, 0);
+  border-width: 4px;
+  border-style: inset;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+.BotonEditar{
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 15px;
+  color: rgb(0, 0, 0);
+  background-color: rgb(64, 0, 255);
+  border-width: 4px;
+  border-style: inset;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+}
+.fondo{
+  background-color: rgb(0, 0, 0);
+}

@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using app_house.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace app_house.Controllers
 {
+    
+    [Authorize]
     public class CasaController : Controller
     {
         private readonly apphouseContext _context;
@@ -24,6 +27,12 @@ namespace app_house.Controllers
               return _context.Casa != null ? 
                           View(await _context.Casa.ToListAsync()) :
                           Problem("Entity set 'apphouseContext.Casa'  is null.");
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> IndexAnon()
+        {
+         var CasaAnon = _context.Casa.Where(a => a.alquilada == false && a.eliminada == false);
+         return View(await CasaAnon.ToListAsync());
         }
 
 

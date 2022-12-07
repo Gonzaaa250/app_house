@@ -6,9 +6,7 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create" class="BotonCrear">Crear Nuevo</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -26,15 +24,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.metros)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MontoF)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.eliminada)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.alquilada)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Localidad)
@@ -65,20 +54,7 @@
                 @Html.DisplayFor(modelItem => item.metros)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MontoF)
-            </td>
-            <td>
-                @(item.eliminada?"Esta casa fue eliminada":"esta casa esta sin eliminar")
-            </td>
-            <td>
-                @(item.alquilada?"Esta casa ya fue alquilada":"esta casa esta disponible")
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Localidad)
-            </td>
-            <td>
-                <a asp-action="Edit" class="BotonEditar mt-5" asp-route-id="@item.Casaid">Editar</a> ||
-                <a class="BotonEliminar mt-5" onclick="eliminarcasa(@item.Casaid)">Eliminar</a>
             </td>
         </tr>
 }
